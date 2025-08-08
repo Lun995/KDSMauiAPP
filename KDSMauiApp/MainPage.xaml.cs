@@ -1,6 +1,4 @@
 ﻿using Microsoft.Maui.Controls;
-using Microsoft.Web.WebView2.Core;
-using AVFoundation;
 
 namespace KDSMauiApp;
 
@@ -17,6 +15,7 @@ public partial class MainPage : ContentPage
         // 設定 WebView 事件
         myWebView.HandlerChanged += (s, e) =>
         {
+#if WINDOWS
             if (myWebView.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.WebView2 webView2)
             {
                 webView2.CoreWebView2Initialized += (sender, args) =>
@@ -24,10 +23,12 @@ public partial class MainPage : ContentPage
                     webView2.CoreWebView2.WebMessageReceived += WebMessageReceived;
                 };
             }
+#endif
         };
     }
 
-    private void WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+#if WINDOWS
+    private void WebMessageReceived(object sender, Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs e)
     {
         var message = e.TryGetWebMessageAsString();
         
@@ -37,21 +38,31 @@ public partial class MainPage : ContentPage
             PlaySound();
         }
     }
+#endif
 
     private void PlaySound()
     {
         try
         {
-            // 播放音效
-            var soundUrl = NSBundle.MainBundle.GetUrlForResource("notification", "wav");
+#if IOS
+            // iOS 音效播放
+            var soundUrl = Foundation.NSBundle.MainBundle.GetUrlForResource("notification", "wav");
             if (soundUrl != null)
             {
-                var audioPlayer = new AVAudioPlayer(soundUrl, "wav", out var error);
+                var audioPlayer = new AVFoundation.AVAudioPlayer(soundUrl, "wav", out var error);
                 if (error == null)
                 {
                     audioPlayer.Play();
                 }
             }
+#elif ANDROID
+            // Android 音效播放
+            // 這裡可以實作 Android 的音效播放
+            System.Diagnostics.Debug.WriteLine("Android 音效播放功能待實作");
+#elif WINDOWS
+            // Windows 音效播放
+            System.Diagnostics.Debug.WriteLine("Windows 音效播放功能待實作");
+#endif
         }
         catch (Exception ex)
         {
