@@ -1,0 +1,43 @@
+trigger:
+- main
+- develop
+
+pool:
+  vmImage: 'macOS-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    version: '8.0.x'
+    includePreviewVersions: false
+
+- script: |
+    dotnet workload install ios
+    dotnet workload list
+  displayName: 'Install MAUI iOS workload'
+
+- script: |
+    dotnet restore
+  displayName: 'Restore NuGet packages'
+
+- script: |
+    dotnet build -c $(buildConfiguration) -f net8.0-ios
+  displayName: 'Build iOS project'
+
+- script: |
+    dotnet publish -c $(buildConfiguration) -f net8.0-ios -p:RuntimeIdentifier=ios-arm64 -p:CreatePackage=true
+  displayName: 'Publish iOS IPA'
+  env:
+    DEVELOPMENT_TEAM: $(DEVELOPMENT_TEAM)
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'bin/Release/net8.0-ios/publish'
+    ArtifactName: 'KDSMauiApp-iOS'
+    publishLocation: 'Container'
+  condition: succeededOrFailed()

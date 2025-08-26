@@ -5,7 +5,25 @@
 
 ## 建置 IPA 檔案
 
-### 前置需求
+### 🚀 建置方案選擇
+
+#### 方案 1：GitHub Actions（推薦 - 完全免費）
+- ✅ 無需本地 Xcode
+- ✅ 在雲端自動建置
+- ✅ 完全免費
+- ⚠️ 適合開發測試，不適合 App Store 發布
+
+#### 方案 2：Docker 容器
+- ✅ 可在任何有 Docker 的環境執行
+- ✅ 無需 macOS
+- ⚠️ 需要 Docker 環境
+
+#### 方案 3：本地 macOS + Xcode
+- ✅ 完整控制權
+- ✅ 可產生 App Store 發布版本
+- ❌ 需要 macOS 和 Xcode
+
+### 📋 前置需求（本地建置）
 1. **macOS 環境**：iOS IPA 建置必須在 macOS 上進行
 2. **Xcode**：安裝最新版本的 Xcode
 3. **.NET 8.0 SDK**：安裝 .NET 8.0 SDK
@@ -27,7 +45,21 @@ dotnet workload list
 
 ### 建置步驟
 
-#### 方法 1：使用腳本（推薦）
+#### 🚀 方法 1：GitHub Actions（推薦）
+1. 推送程式碼到 GitHub
+2. 設定 `DEVELOPMENT_TEAM` secret
+3. 自動建置，下載 IPA artifact
+
+詳細設定請參考：`GITHUB-ACTIONS-SETUP.md`
+
+#### 🐳 方法 2：Docker 容器
+```bash
+# 使用 Docker 建置
+chmod +x build-ios-docker.sh
+./build-ios-docker.sh
+```
+
+#### 💻 方法 3：使用腳本（本地 macOS）
 ```bash
 # 在 macOS 上執行
 chmod +x build-ios.sh
@@ -37,7 +69,7 @@ chmod +x build-ios.sh
 ./build-ios-mac.sh
 ```
 
-#### 方法 2：手動建置
+#### 🔧 方法 4：手動建置
 ```bash
 # 1. 清理專案
 dotnet clean
