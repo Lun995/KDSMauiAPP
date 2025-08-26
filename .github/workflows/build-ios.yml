@@ -1,0 +1,59 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    defaults:
+      run:
+        working-directory: KDSMauiApp
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install .NET MAUI workload
+      run: |
+        dotnet workload install ios
+        dotnet workload list
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build iOS project
+      run: dotnet build -c Release -f net8.0-ios
+
+    - name: Publish iOS IPA
+      run: |
+        dotnet publish -c Release -f net8.0-ios -p:RuntimeIdentifier=ios-arm64 -p:CreatePackage=true
+      env:
+        DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+
+    - name: Upload IPA artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: KDSMauiApp-iOS
+        path: KDSMauiApp/bin/Release/net8.0-ios/publish/*.ipa
+
+    - name: Get IPA file info
+      run: |
+        ls -la bin/Release/net8.0-ios/publish/
+        if [ -f "bin/Release/net8.0-ios/publish/KDSMauiApp.ipa" ]; then
+          echo "✅ IPA 建置成功！"
+          du -h "bin/Release/net8.0-ios/publish/KDSMauiApp.ipa"
+        else
+          echo "❌ IPA 建置失敗！"
+          exit 1
+        fi
