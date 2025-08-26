@@ -15,7 +15,7 @@
 		<ApplicationTitle>KDSMauiApp</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.yourcompany.kdsmauiapp</ApplicationId>
+		<ApplicationId>com.howtruelie.kdsmauiapp</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -28,12 +28,14 @@
 		
 		<!-- iOS 建置設定 -->
 		<RuntimeIdentifier Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">ios-arm64</RuntimeIdentifier>
-		<CreatePackage>false</CreatePackage>
+		<CreatePackage>true</CreatePackage>
 		<CodesignKey>iPhone Developer</CodesignKey>
 		<CodesignProvision>Automatic</CodesignProvision>
 		<MtouchLink>None</MtouchLink>
-		<MtouchDebug>true</MtouchDebug>
+		<MtouchDebug>false</MtouchDebug>
 		<CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+		<DevelopmentTeam>$(DEVELOPMENT_TEAM)</DevelopmentTeam>
+		<MtouchExtraArgs>--setenv=DOTNET_MODIFIABLE_ASSEMBLIES=1</MtouchExtraArgs>
 	</PropertyGroup>
 
 	<ItemGroup>
