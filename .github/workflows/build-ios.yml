@@ -33,13 +33,18 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Install .NET MAUI workload
+    - name: Install .NET MAUI workloads
       run: |
         dotnet workload install ios
+        dotnet workload install android
+        dotnet workload install maui
         dotnet workload list
 
     - name: Restore dependencies
       run: dotnet restore
+      
+    - name: Restore workloads
+      run: dotnet workload restore
 
     - name: Build iOS project
       run: dotnet build -c Release -f net8.0-ios
