@@ -6,6 +6,15 @@ on:
   pull_request:
     branches: [ master, main ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to build for'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
 
 jobs:
   build-ios:
