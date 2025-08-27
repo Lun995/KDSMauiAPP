@@ -14,7 +14,7 @@ dotnet workload list | grep ios
 echo "清理舊的建置..."
 dotnet clean
 
-# 還原套件
+# 還原套件111
 echo "還原 NuGet 套件..."
 dotnet restore
 
