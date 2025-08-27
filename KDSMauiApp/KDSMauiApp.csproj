@@ -29,13 +29,19 @@
 		<!-- iOS 建置設定 -->
 		<RuntimeIdentifier Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">ios-arm64</RuntimeIdentifier>
 		<CreatePackage>true</CreatePackage>
-		<CodesignKey>iPhone Developer</CodesignKey>
-		<CodesignProvision>Automatic</CodesignProvision>
+		<!-- 模擬器建置設定 -->
+		<CodesignKey></CodesignKey>
+		<CodesignProvision></CodesignProvision>
 		<MtouchLink>None</MtouchLink>
 		<MtouchDebug>false</MtouchDebug>
-		<CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-		<DevelopmentTeam>$(DEVELOPMENT_TEAM)</DevelopmentTeam>
+		<CodesignEntitlements></CodesignEntitlements>
+		<DevelopmentTeam></DevelopmentTeam>
 		<MtouchExtraArgs>--setenv=DOTNET_MODIFIABLE_ASSEMBLIES=1</MtouchExtraArgs>
+		<!-- 嘗試繞過簽名要求 -->
+		<MtouchUseCodeSigning>false</MtouchUseCodeSigning>
+		<MtouchAutoProvisioning>false</MtouchAutoProvisioning>
+		<!-- 使用模擬器目標 -->
+		<MtouchSimulator>true</MtouchSimulator>
 	</PropertyGroup>
 
 	<ItemGroup>
